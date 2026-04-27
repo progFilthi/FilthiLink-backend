@@ -1,0 +1,15 @@
+services:
+  postgres:
+    image: postgres:latest
+    container_name: filthiLinkPg
+    environment:
+      POSTGRES_DB: filthiLinkDb
+      POSTGRES_USER: filthi
+      POSTGRES_PASSWORD: filthi_pass
+      PGDATA: /var/lib/postgresql/data/pgdata
+    ports:
+      - "5432:5432"
+    volumes:
+      - filthiLinkPgData:/var/lib/postgresql/data
+volumes:
+  filthiLinkPgData:
