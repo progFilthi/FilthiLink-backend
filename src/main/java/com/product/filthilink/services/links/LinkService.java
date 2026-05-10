@@ -4,10 +4,13 @@ import com.product.filthilink.entities.dtos.CreateLinkRequestDto;
 import com.product.filthilink.entities.dtos.LinkResponseDto;
 import com.product.filthilink.entities.mappers.LinkMapper;
 import com.product.filthilink.entities.models.Link;
+import com.product.filthilink.exceptions.LinkExpiredException;
+import com.product.filthilink.exceptions.LinkNotFoundException;
 import com.product.filthilink.repositories.links.LinkRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.security.SecureRandom;
 import java.time.LocalDateTime;
@@ -26,6 +29,7 @@ public class LinkService {
     @Value("${app.base-url}")
     private String baseUrl;
 
+    @Transactional
     public LinkResponseDto createLink(CreateLinkRequestDto dto) {
         String shortCode = generateUniqueShortCode();
 
@@ -38,6 +42,23 @@ public class LinkService {
         return linkMapper.toResponseDto(savedLink, baseUrl);
 
     }
+
+
+    public String resolveLink(String shortCode ) {
+
+        Link link = linkRepository.findByShortCode(shortCode)
+                .orElseThrow(()-> new LinkNotFoundException(shortCode));
+
+        if( link.getExpiresAt().isBefore(LocalDateTime.now()) ) {
+            throw new LinkExpiredException(shortCode);
+        }
+
+        //todo: implement click count increment for every click on the redirect
+
+        return link.getOriginalUrl();
+
+    }
+
 
     private String generateShortCode() {
         Random random = new SecureRandom();
@@ -62,6 +83,8 @@ public class LinkService {
         } while (linkRepository.existsByShortCode(shortCode));
             return shortCode;
     }
+
+
 
 
 

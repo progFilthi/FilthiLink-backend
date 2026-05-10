@@ -9,7 +9,6 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDateTime;
@@ -38,10 +37,17 @@ public class GlobalExceptionHandler {
         return build(ex.getMessage(), HttpStatus.UNAUTHORIZED, request);
     }
 
-    @ExceptionHandler(ResourceNotFound.class)
-    public ResponseEntity<ApiErrorResponseDto> handleNotFound(ResourceNotFound ex, HttpServletRequest request) {
+    @ExceptionHandler(LinkNotFoundException.class)
+    public ResponseEntity<ApiErrorResponseDto> handleLinkNotFound(LinkNotFoundException ex, HttpServletRequest request) {
 
         return build(ex.getMessage(), HttpStatus.NOT_FOUND, request);
+
+    }
+
+    @ExceptionHandler(LinkExpiredException.class)
+    public ResponseEntity<ApiErrorResponseDto> handleLinkExpired(LinkExpiredException ex, HttpServletRequest request) {
+
+        return build(ex.getMessage(), HttpStatus.GONE, request);
 
     }
 
