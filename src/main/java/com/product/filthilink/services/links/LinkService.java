@@ -22,6 +22,7 @@ public class LinkService {
 
     private final LinkRepository linkRepository;
     private final LinkMapper linkMapper;
+    private final ClickTrackingService clickTrackingService;
 
     private static final String base62 = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
     private static final int SHORT_CODE_LENGTH = 6;
@@ -53,7 +54,8 @@ public class LinkService {
             throw new LinkExpiredException(shortCode);
         }
 
-        //todo: implement click count increment for every click on the redirect
+        clickTrackingService.increment(link.getId());
+
 
         return link.getOriginalUrl();
 
