@@ -16,7 +16,7 @@ public class LinkMapperImpl implements LinkMapper {
     @Override
     public Link toEntity(CreateLinkRequestDto dto, String shortCode, Integer clickCount, LocalDateTime expiresAt) {
         Link link = new Link();
-        link.setOriginalUrl(dto.getOriginalUrl());
+        link.setOriginalUrl(dto.originalUrl());
         link.setShortCode(shortCode);
         link.setClickCount(clickCount);
         link.setExpiresAt(expiresAt);

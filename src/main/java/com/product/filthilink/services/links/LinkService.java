@@ -27,8 +27,6 @@ public class LinkService {
     private String baseUrl;
 
     public LinkResponseDto createLink(CreateLinkRequestDto dto) {
-        System.out.println("Received originalUrl: " + dto.getOriginalUrl());
-
         String shortCode = generateUniqueShortCode();
 
         LocalDateTime expiresAt = LocalDateTime.now().plusDays(30);
