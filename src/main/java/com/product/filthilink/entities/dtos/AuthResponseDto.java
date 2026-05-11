@@ -1,6 +1,7 @@
 package com.product.filthilink.entities.dtos;
 
-public record UserResponseDto(
+public record AuthResponseDto(
+        String token,
         String email
 ) {
 }
