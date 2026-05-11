@@ -37,8 +37,8 @@ public class GlobalExceptionHandler {
         return build(ex.getMessage(), HttpStatus.UNAUTHORIZED, request);
     }
 
-    @ExceptionHandler(LinkNotFoundException.class)
-    public ResponseEntity<ApiErrorResponseDto> handleLinkNotFound(LinkNotFoundException ex, HttpServletRequest request) {
+    @ExceptionHandler(ResourceNotFound.class)
+    public ResponseEntity<ApiErrorResponseDto> handleNotFound(ResourceNotFound ex, HttpServletRequest request) {
 
         return build(ex.getMessage(), HttpStatus.NOT_FOUND, request);
 

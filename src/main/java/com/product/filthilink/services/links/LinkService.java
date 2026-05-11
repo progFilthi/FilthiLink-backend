@@ -4,11 +4,14 @@ import com.product.filthilink.entities.dtos.CreateLinkRequestDto;
 import com.product.filthilink.entities.dtos.LinkResponseDto;
 import com.product.filthilink.entities.mappers.LinkMapper;
 import com.product.filthilink.entities.models.Link;
+import com.product.filthilink.entities.models.User;
 import com.product.filthilink.exceptions.LinkExpiredException;
-import com.product.filthilink.exceptions.LinkNotFoundException;
+import com.product.filthilink.exceptions.ResourceNotFound;
+import com.product.filthilink.repositories.auth.UserRepository;
 import com.product.filthilink.repositories.links.LinkRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,6 +26,7 @@ public class LinkService {
     private final LinkRepository linkRepository;
     private final LinkMapper linkMapper;
     private final ClickTrackingService clickTrackingService;
+    private final UserRepository userRepository;
 
     private static final String base62 = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
     private static final int SHORT_CODE_LENGTH = 6;
@@ -31,12 +35,17 @@ public class LinkService {
     private String baseUrl;
 
     @Transactional
-    public LinkResponseDto createLink(CreateLinkRequestDto dto) {
+    public LinkResponseDto createLink(CreateLinkRequestDto dto, String email) {
+
+        User user = userRepository.findByEmail(email).orElseThrow(() -> new UsernameNotFoundException(email));
+
+
         String shortCode = generateUniqueShortCode();
 
         LocalDateTime expiresAt = LocalDateTime.now().plusDays(30);
 
         Link link = linkMapper.toEntity(dto, shortCode, 0, expiresAt);
+        link.setUser(user);
 
         Link savedLink = linkRepository.save(link);
 
@@ -48,7 +57,7 @@ public class LinkService {
     public String resolveLink(String shortCode ) {
 
         Link link = linkRepository.findByShortCode(shortCode)
-                .orElseThrow(()-> new LinkNotFoundException(shortCode));
+                .orElseThrow(()-> new ResourceNotFound(shortCode));
 
         if( link.getExpiresAt().isBefore(LocalDateTime.now()) ) {
             throw new LinkExpiredException(shortCode);

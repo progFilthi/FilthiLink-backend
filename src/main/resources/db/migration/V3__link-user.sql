@@ -1,0 +1,8 @@
+ALTER TABLE links
+    ADD user_id BIGINT;
+
+ALTER TABLE links
+    ALTER COLUMN user_id SET NOT NULL;
+
+ALTER TABLE links
+    ADD CONSTRAINT FK_LINKS_ON_USER FOREIGN KEY (user_id) REFERENCES users (id);
