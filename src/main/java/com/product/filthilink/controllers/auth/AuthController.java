@@ -1,9 +1,10 @@
 package com.product.filthilink.controllers.auth;
 
 import com.product.filthilink.entities.dtos.AuthResponseDto;
-import com.product.filthilink.entities.dtos.LoginResponseDto;
+import com.product.filthilink.entities.dtos.LoginRequestDto;
 import com.product.filthilink.entities.dtos.RegisterRequestDto;
 import com.product.filthilink.services.auth.AuthService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,12 +21,12 @@ public class AuthController {
     private final AuthService authService;
 
     @PostMapping("/register")
-    public ResponseEntity<AuthResponseDto> register(@RequestBody RegisterRequestDto dto){
+    public ResponseEntity<AuthResponseDto> register( @Valid @RequestBody RegisterRequestDto dto){
         return ResponseEntity.status(HttpStatus.CREATED).body(authService.register(dto));
     }
 
     @PostMapping("/login")
-    public ResponseEntity<AuthResponseDto> login(@RequestBody LoginResponseDto dto){
+    public ResponseEntity<AuthResponseDto> login(@Valid @RequestBody LoginRequestDto dto){
         return ResponseEntity.status(HttpStatus.CREATED).body(authService.login(dto));
     }
 

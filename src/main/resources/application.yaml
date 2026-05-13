@@ -22,4 +22,4 @@ app:
   base-url: http://localhost:8080
   jwt:
     secret: Wuw92YSHF5G5GzDcl/podNGePy3b2FSSzO/HllosEi4=
-    expiry: 86400000
+    expiry: 600000
