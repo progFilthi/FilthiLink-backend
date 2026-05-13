@@ -93,10 +93,15 @@ public class ApiKeyService {
 
 
     public Optional<UserDetails> validateApiKey(String rawKey ){
-        return apiKeyRepository.findAll()
-                .stream()
+
+        if( rawKey == null || rawKey.length() < 12 ) return Optional.empty();
+
+        String prefix = rawKey.substring(0, 12);
+
+
+
+        return apiKeyRepository.findByKeyPrefix(prefix)
                 .filter(key -> passwordEncoder.matches(rawKey, key.getKeyHash()))
-                .findFirst()
                 .map(key -> {
                     key.setLastUsedAt(LocalDateTime.now());
                     apiKeyRepository.save(key);
