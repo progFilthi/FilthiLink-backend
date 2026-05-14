@@ -11,6 +11,8 @@ import com.product.filthilink.repositories.auth.UserRepository;
 import com.product.filthilink.repositories.links.LinkRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Page;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -50,6 +52,15 @@ public class LinkService {
         Link savedLink = linkRepository.save(link);
 
         return linkMapper.toResponseDto(savedLink, baseUrl);
+
+    }
+
+    public Page<LinkResponseDto> getLinksByUser(String email, Pageable pageable) {
+
+        User user = userRepository.findByEmail(email).orElseThrow(() -> new UsernameNotFoundException(email));
+
+        return linkRepository.findByUserId(user.getId(), pageable)
+                .map(link -> linkMapper.toResponseDto(link, baseUrl));
 
     }
 

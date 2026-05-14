@@ -27,6 +27,7 @@ public class LinkMapperImpl implements LinkMapper {
     @Override
     public LinkResponseDto toResponseDto(Link link, String baseUrl) {
         return new LinkResponseDto(
+                link.getId(),
                 baseUrl + "/" +  link.getShortCode(),
                 link.getOriginalUrl(),
                 link.getClickCount(),
