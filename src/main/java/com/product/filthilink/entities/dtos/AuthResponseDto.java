@@ -1,7 +1,8 @@
 package com.product.filthilink.entities.dtos;
 
 public record AuthResponseDto(
-        String token,
+        String accessToken,
+        com.product.filthilink.entities.models.RefreshToken refreshToken,
         String email
 ) {
 }
