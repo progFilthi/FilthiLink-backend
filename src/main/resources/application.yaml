@@ -20,6 +20,8 @@ spring:
 
 app:
   base-url: http://localhost:8080
+  refresh-token:
+    expiry: 7
   jwt:
     secret: Wuw92YSHF5G5GzDcl/podNGePy3b2FSSzO/HllosEi4=
-    expiry: 600000
+    expiry: 900000
