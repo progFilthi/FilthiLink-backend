@@ -50,8 +50,6 @@ public class AuthService {
 
         userRepository.save(user);
 
-        String token = jwtUtil.generateAccessToken(user.getEmail());
-
         return generateAuthResponse(user);
     }
 
@@ -89,6 +87,8 @@ public class AuthService {
 
         storedToken.setRevoked(true);
 
+        refreshTokenRepository.save(storedToken);
+
         return generateAuthResponse(storedToken.getUser());
     }
 
@@ -112,7 +112,7 @@ public class AuthService {
         refreshToken.setExpiresAt(LocalDateTime.now().plusDays(Long.parseLong(refreshTokenExpiry)));
         refreshTokenRepository.save(refreshToken);
 
-        return new AuthResponseDto(accessToken, refreshToken, user.getEmail());
+        return new AuthResponseDto(accessToken, rawRefreshToken, user.getEmail());
 
     }
 
