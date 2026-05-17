@@ -1,9 +1,8 @@
 package com.product.filthilink.services.auth;
 
-import com.product.filthilink.entities.dtos.AuthResponseDto;
-import com.product.filthilink.entities.dtos.LoginRequestDto;
-import com.product.filthilink.entities.dtos.RefreshRequestDto;
-import com.product.filthilink.entities.dtos.RegisterRequestDto;
+import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
+import com.product.filthilink.entities.dtos.*;
+import com.product.filthilink.entities.enums.AuthProvider;
 import com.product.filthilink.entities.models.RefreshToken;
 import com.product.filthilink.entities.models.User;
 import com.product.filthilink.exceptions.BadRequest;
@@ -18,6 +17,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
@@ -34,6 +34,7 @@ public class AuthService {
     private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
     private final RefreshTokenRepository refreshTokenRepository;
+    private final GoogleTokenVerifier googleTokenVerifier;
 
     @Value("${app.refresh-token.expiry}")
     private String refreshTokenExpiry;
@@ -54,6 +55,7 @@ public class AuthService {
     }
 
 
+    @Transactional
     public AuthResponseDto login(LoginRequestDto dto) {
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(dto.email(), dto.password()));
 
@@ -61,12 +63,60 @@ public class AuthService {
                 new UsernameNotFoundException(dto.email())
         );
 
+        //This guard prevents password login for Google o-oauth users
+        if( user.getAuthProvider() == AuthProvider.GOOGLE ){
+            throw new BadRequest("This account uses google login only. Please continue with google");
+        }
+
         //revoke all existing refresh tokens on login
 
         refreshTokenRepository.deleteTokenByUser(user);
 
         return generateAuthResponse(user);
     }
+
+    @Transactional
+    public AuthResponseDto googleLogin(GoogleAuthRequestDto dto){
+        GoogleIdToken.Payload payload = googleTokenVerifier.verify(dto.idToken());
+
+        String email = payload.getEmail();
+        String googleId = payload.getSubject();
+
+        User user = userRepository.findByEmail(email)
+                .map(exitingUser -> linkGoogleIfNeeded(exitingUser, googleId))
+                .orElseGet(()-> createGoogleUser(email, googleId));
+
+        refreshTokenRepository.deleteTokenByUser(user);
+
+        return generateAuthResponse(user);
+
+    }
+
+    private User linkGoogleIfNeeded(User user, String googleId){
+
+        if (user.getGoogleId() == null) {
+
+            user.setGoogleId(googleId);
+            user.setAuthProvider(AuthProvider.BOTH);
+            userRepository.save(user);
+        }
+
+        return user;
+
+    }
+
+    private User createGoogleUser(String  email, String googleId){
+        User user = new User();
+
+        user.setGoogleId(googleId);
+        user.setEmail(email);
+        user.setAuthProvider(AuthProvider.GOOGLE);
+
+        userRepository.save(user);
+
+        return user;
+    }
+
 
     public AuthResponseDto refresh(RefreshRequestDto dto){
         String tokenHash = hashToken(dto.refreshToken());
@@ -92,6 +142,7 @@ public class AuthService {
         return generateAuthResponse(storedToken.getUser());
     }
 
+    @Transactional
     public void logout(String email){
         User user = userRepository.findByEmail(email).orElseThrow(
                 ()-> new UsernameNotFoundException(email)

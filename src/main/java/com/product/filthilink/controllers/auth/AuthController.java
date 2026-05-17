@@ -1,9 +1,6 @@
 package com.product.filthilink.controllers.auth;
 
-import com.product.filthilink.entities.dtos.AuthResponseDto;
-import com.product.filthilink.entities.dtos.LoginRequestDto;
-import com.product.filthilink.entities.dtos.RefreshRequestDto;
-import com.product.filthilink.entities.dtos.RegisterRequestDto;
+import com.product.filthilink.entities.dtos.*;
 import com.product.filthilink.services.auth.AuthService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -43,6 +40,11 @@ public class AuthController {
     public ResponseEntity<Void> logout(@AuthenticationPrincipal UserDetails userDetails) {
         authService.logout(userDetails.getUsername());
         return ResponseEntity.noContent().build();
+    }
+
+    @PostMapping("/google")
+    public ResponseEntity<AuthResponseDto> googleLogin(@RequestBody GoogleAuthRequestDto dto) {
+        return ResponseEntity.ok(authService.googleLogin(dto));
     }
 
 
