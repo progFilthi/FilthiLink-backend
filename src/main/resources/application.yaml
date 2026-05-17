@@ -19,6 +19,9 @@ spring:
     open-in-view: false
 
 app:
+  google:
+    client-id: 452931347363-rsori3do9lighra6m696ibupaerua4k4.apps.googleusercontent.com
+    client-secret: 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
   base-url: http://localhost:8080
   refresh-token:
     expiry: 7

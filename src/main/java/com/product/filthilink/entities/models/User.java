@@ -1,5 +1,6 @@
 package com.product.filthilink.entities.models;
 
+import com.product.filthilink.entities.enums.AuthProvider;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -26,8 +27,16 @@ public class User implements UserDetails {
     @Column(unique = true, nullable = false)
     private String email;
 
-    @Column(nullable = false)
+    //for Google users we need to make the password nullable
     private String password;
+
+    @Column(unique = true, nullable = false)
+    private String googleId;
+
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    private AuthProvider authProvider = AuthProvider.EMAIL;
+
 
     @CreationTimestamp
     private LocalDateTime createdAt;
@@ -43,5 +52,10 @@ public class User implements UserDetails {
     @NonNull
     public String getUsername() {
         return email;
+    }
+
+    @Override
+    public String getPassword() {
+        return password;
     }
 }
