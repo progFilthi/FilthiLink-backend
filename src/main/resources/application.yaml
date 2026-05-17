@@ -26,5 +26,5 @@ app:
   refresh-token:
     expiry: 7
   jwt:
-    secret: Wuw92YSHF5G5GzDcl/podNGePy3b2FSSzO/HllosEi4=
+    secret: ${JWT_SECRET}
     expiry: 900000
