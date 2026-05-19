@@ -31,10 +31,10 @@ app:
 
 
 dodo:
-  api-key: ${DODO_API_KEY}
-  base-url: https://api.filthilink.store
-  webhook-key: ${DODO_WEBHOOK_KEY}
-  return-url: https://filthilink.store/subscription/success
-  products:
+  payments:
+    api-key: ${DODO_API_KEY}
+    webhook-key: ${DODO_WEBHOOK_KEY}
     premium-monthly: ${PREMIUM_MONTHLY}
     premium-yearly: ${PREMIUM_YEARLY}
+    environment: ${DODO_ENVIRONMENT}
+#  sandbox or live

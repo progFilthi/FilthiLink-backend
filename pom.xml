@@ -122,6 +122,12 @@
             <version>2.2.0</version>
         </dependency>
 
+        <dependency>
+            <groupId>com.dodopayments.api</groupId>
+            <artifactId>dodo-payments-java</artifactId>
+            <version>1.97.1</version>
+        </dependency>
+
     </dependencies>
 
     <build>

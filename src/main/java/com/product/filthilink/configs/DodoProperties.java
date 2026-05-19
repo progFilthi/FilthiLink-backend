@@ -10,6 +10,7 @@ public record DodoProperties(
         @NotBlank String premiumMonthly,
         @NotBlank String premiumYearly,
         @NotBlank String apiKey,
-        @NotBlank String webhookKey
+        @NotBlank String webhookKey,
+        String environment
 ) {
 }

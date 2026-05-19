@@ -41,7 +41,9 @@ public class SecurityConfig {
                                 "/{shortCode}",
                                 "/v3/api-docs/**",
                                 "/swagger-ui/**",
-                                "/swagger-ui.html")
+                                "/swagger-ui.html",
+                                "/api/v1/webhooks/dodo",
+                                "/api/v1/subscriptions/**")
                         .permitAll()
                         .anyRequest().authenticated())
                 .addFilterBefore(apiKeyAuthFilter, UsernamePasswordAuthenticationFilter.class)
