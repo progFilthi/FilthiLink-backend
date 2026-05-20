@@ -1,7 +1,7 @@
 package com.product.filthilink.controllers.payments;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.core.type.TypeReference;
+import tools.jackson.databind.JsonNode;
+import tools.jackson.databind.ObjectMapper;
 import com.product.filthilink.entities.dtos.WebhookPayload;
 import com.product.filthilink.services.payments.WebhookRouter;
 import lombok.RequiredArgsConstructor;
@@ -13,7 +13,11 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class WebhookController {
     private final WebhookRouter webhookRouter;
-    private final ObjectMapper objectMapper; // Autoconfigured by Spring Boot
+
+    private final ObjectMapper objectMapper;
+
+
+
     @PostMapping
     public ResponseEntity<Void> handleWebhook(
             @RequestHeader(value = "X-Dodo-Signature", required = false) String signature,
@@ -29,17 +33,22 @@ public class WebhookController {
             return ResponseEntity.internalServerError().build();
         }
     }
-    private WebhookPayload parsePayload(String rawPayload) throws Exception {
+    private WebhookPayload parsePayload(String rawPayload) {
         JsonNode root = objectMapper.readTree(rawPayload);
+        JsonNode metadataNode = root.path("metadata");
+        Map<String, Object> metadata = metadataNode.isMissingNode() || metadataNode.isNull()
+                ? Map.of()
+                : objectMapper.treeToValue(metadataNode, new TypeReference<>() {
+        });
         return new WebhookPayload(
-                root.path("payment_id").asText(root.path("subscription_id").asText()),
-                root.path("event_type").asText(),
-                root.path("subscription_id").asText(null),
-                root.path("customer").path("customer_id").asText(null),
-                root.path("payment_id").asText(null),
-                root.path("next_billing_date").asText(null),
-                root.path("product_id").asText(null),
-                objectMapper.convertValue(root.path("metadata"), new TypeReference<Map<String, Object>>() {}),
+                root.path("payment_id").asString(root.path("subscription_id").asString()),
+                root.path("event_type").asString(),
+                root.path("subscription_id").asString(null),
+                root.path("customer").path("customer_id").asString(null),
+                root.path("payment_id").asString(null),
+                root.path("next_billing_date").asString(null),
+                root.path("product_id").asString(null),
+                metadata,
                 rawPayload
         );
     }
