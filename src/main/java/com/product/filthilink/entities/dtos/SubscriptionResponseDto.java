@@ -5,7 +5,7 @@ import com.product.filthilink.entities.enums.SubscriptionStatus;
 
 import java.time.Instant;
 
-public record SubscriptionResponse(
+public record SubscriptionResponseDto(
         Plan plan,
         SubscriptionStatus status,
         Instant currentPeriodEnd,
