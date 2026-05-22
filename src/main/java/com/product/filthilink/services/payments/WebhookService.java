@@ -42,7 +42,7 @@ public class WebhookService {
                 .orElse(null);
         if (sub == null) return;
         sub.setDodoSubscriptionId(subscriptionId);
-        sub.setPlans(Plan.FREE);
+        sub.setPlans(Plan.PREMIUM);
         sub.setStatus(SubscriptionStatus.ACTIVE);
         if (nextBilling != null) {
             sub.setCurrentPeriodEnd(Instant.parse(nextBilling));

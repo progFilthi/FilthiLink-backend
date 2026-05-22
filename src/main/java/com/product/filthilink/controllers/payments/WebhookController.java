@@ -27,7 +27,7 @@ public class WebhookController {
 
             JsonNode root = objectMapper.readTree(rawPayload);
             String eventType = root.path("event_type").asString();
-            String eventId = root.path("payment_id").asString(root.path("subscription_id").asString());
+            String eventId = root.path("event_id").asString();
 
             webhookService.process(eventType, root, eventId);
 

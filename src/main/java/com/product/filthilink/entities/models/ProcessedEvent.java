@@ -30,5 +30,6 @@ public class ProcessedEvent {
     public ProcessedEvent(String eventId, String eventType) {
         this.eventId = eventId;
         this.eventType = eventType;
+        this.processedAt = Instant.now();
     }
 }

@@ -8,7 +8,7 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class DodoPaymentsConfig {
 
-    private static final String  SANDBOX_URL = "https://sandbox.dodopayments.com";
+    private static final String  SANDBOX_URL = "https://test.dodopayments.com";
     private static final String  LIVE_URL = "https://live.dodopayments.com";
 
     @Bean
