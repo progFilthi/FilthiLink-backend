@@ -40,9 +40,10 @@ public class SecurityConfig {
                                 "/api/v1/health",
                                 "/{shortCode}",
                                 "/v3/api-docs/**",
-                                "/swagger-ui/**",
-                                "/swagger-ui.html",
-                                "/api/v1/webhooks/dodo")
+//                                "/swagger-ui/**",
+//                                "/swagger-ui.html",
+                                "/api/v1/webhooks/dodo",
+                                "/actuator/**")
                         .permitAll()
                         .anyRequest().authenticated())
                 .addFilterBefore(apiKeyAuthFilter, UsernamePasswordAuthenticationFilter.class)

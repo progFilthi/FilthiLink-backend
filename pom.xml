@@ -110,7 +110,7 @@
         <dependency>
             <groupId>com.google.api-client</groupId>
             <artifactId>google-api-client</artifactId>
-            <version>2.2.0</version>
+            <version>2.9.0</version>
         </dependency>
 
         <dependency>
@@ -120,13 +120,16 @@
         </dependency>
 
 
+<!--        <dependency>-->
+<!--                    <groupId>org.springdoc</groupId>-->
+<!--                    <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>-->
+<!--                    <version>3.0.2</version>-->
+<!--                    <scope>compile</scope>-->
+<!--        </dependency>-->
         <dependency>
-                    <groupId>org.springdoc</groupId>
-                    <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
-                    <version>3.0.2</version>
-                    <scope>compile</scope>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-actuator</artifactId>
         </dependency>
-
 
 
     </dependencies>
