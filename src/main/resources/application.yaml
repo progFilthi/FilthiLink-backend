@@ -27,7 +27,7 @@ app:
     client-id: ${CLIENT_ID}
     client-secret: ${CLIENT_SECRET}
 #  base-url: http://localhost:8080
-    base-url: https:/?filthilink.store
+    base-url: https://filthilink.store
   refresh-token:
     expiry: 7
   jwt:
