@@ -28,6 +28,7 @@ app:
     client-secret: ${CLIENT_SECRET}
 #  base-url: http://localhost:8080
   base-url: https://filthilink.store
+  admin-emails: ${ADMIN_EMAILS:}
   refresh-token:
     expiry: 7
   jwt:
